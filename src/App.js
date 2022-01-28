@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import MenuIcon from "@mui/icons-material/Menu";
+import MyBtn from "./components/MyBtn";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSchool } from "@fortawesome/free-solid-svg-icons";
+import GlobalStyle from "./styles/global";
+import Layout from "./containers/Layout";
+import Teachers from "./pages/Teachers";
+import SchoolPage from "./pages/School";
+import { Routes, Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <GlobalStyle />
+      <Layout>
+        <Routes>
+          <Route path="/" element={<SchoolPage />} />
+          <Route path="/teachers/*" element={<Teachers />} />
+        </Routes>
+      </Layout>
+    </>
   );
-}
+};
 
 export default App;
