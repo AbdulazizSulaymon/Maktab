@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { Route, Routes, Link } from "react-router-dom";
 import DataTable from "../components/Table";
 import dataTeachers from "../data/teachers";
-import AddPage from "./Teachers/AddPage";
+import CreateForm from "./Teachers/AddPage";
 
 const columns = [
   {
@@ -43,7 +43,7 @@ export default function Teachers() {
       <h2 className="mb-4">O'qituvchilar</h2>
 
       <Routes>
-        <Route path="/add" element={<AddPage />} />
+        <Route path="/add" element={<CreateForm />} />
         <Route path="/" element={<TeachersPage></TeachersPage>} />
       </Routes>
     </>
