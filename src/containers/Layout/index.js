@@ -29,6 +29,10 @@ import {
   useResolvedPath,
 } from "react-router-dom";
 import CustomLink from "../../components/CustomLink";
+import DarkModeContext from "../../data/DarkModeContext";
+import { Button } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 const drawerWidth = 240;
 
@@ -82,9 +86,10 @@ const AppBar = styled(MuiAppBar, {
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
+})(({ theme, open, dark }) => ({
   width: drawerWidth,
   flexShrink: 0,
+
   whiteSpace: "nowrap",
   boxSizing: "border-box",
   ...(open && {
@@ -99,6 +104,8 @@ const Drawer = styled(MuiDrawer, {
 
 const Layout = (props) => {
   console.log(props);
+  const { dark, setDark } = React.useContext(DarkModeContext);
+
   const { children } = props;
 
   const theme = useTheme();
@@ -112,67 +119,81 @@ const Layout = (props) => {
     setOpen(false);
   };
 
-  console.log(useParams());
-  console.log(useLocation());
-  console.log(useNavigate());
+  console.log(dark);
 
   const pathname = useLocation().pathname;
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
+    <LayoutWrapper dark={dark}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar position="fixed" open={open}>
+          <Toolbar
+            className="topToolbar"
             sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" }),
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            School
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {menu.map((item, index) => (
-            <Link key={item.text} to={`/${item.path}`}>
-              <ListItem
-                button
-                selected={
-                  pathname.startsWith(`/${item.path}`) &&
-                  pathname.length - 1 <= item.path.length
-                }
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{
+                  marginRight: "36px",
+                  ...(open && { display: "none" }),
+                }}
               >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} sx={{ color: "black" }} />
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        {children}
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" noWrap component="div">
+                School
+              </Typography>
+            </div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Button sx={{ color: "white" }} onClick={() => setDark(!dark)}>
+                <FontAwesomeIcon icon={(dark && faMoon) || faSun} />
+              </Button>
+            </div>
+          </Toolbar>
+        </AppBar>
+        <Drawer variant="permanent" open={open} dark={dark}>
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {menu.map((item, index) => (
+              <Link key={item.text} to={`/${item.path}`}>
+                <ListItem
+                  button
+                  selected={
+                    pathname.startsWith(`/${item.path}`) &&
+                    pathname.length - 1 <= item.path.length
+                  }
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} sx={{ color: "black" }} />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <DrawerHeader />
+          {children}
+        </Box>
       </Box>
-    </Box>
+    </LayoutWrapper>
   );
 };
 

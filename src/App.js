@@ -8,10 +8,14 @@ import Teachers from "./pages/Teachers";
 import SchoolPage from "./pages/School";
 import { Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
+import DarkModeContext from "./data/DarkModeContext";
 
 const App = () => {
+  const [dark, setDark] = useState(false);
+
   return (
-    <>
+    <DarkModeContext.Provider value={{ dark, setDark }}>
       <GlobalStyle />
       <Layout>
         <Routes>
@@ -19,7 +23,7 @@ const App = () => {
           <Route path="/teachers/*" element={<Teachers />} />
         </Routes>
       </Layout>
-    </>
+    </DarkModeContext.Provider>
   );
 };
 

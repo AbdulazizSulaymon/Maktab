@@ -194,7 +194,7 @@ export default function DataTable(props) {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={columns.length}
+                colSpan={columns.length + 1 + (actions ? 1 : 0)}
                 count={rows.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
