@@ -1,10 +1,11 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@mui/material";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes, Link, useNavigate } from "react-router-dom";
 import DataTable from "../components/Table";
 import dataTeachers from "../data/teachers";
-import CreateForm from "./Teachers/AddPage";
+import AddPage from "./Teachers/AddPage";
+import EditPage from "./Teachers/EditPage";
 
 const columns = [
   {
@@ -22,7 +23,50 @@ const columns = [
   { key: "salary", title: "Maoshi" },
 ];
 
+const form = [
+  {
+    label: "Ism",
+    key: "firstName",
+    options: { required: "Ism kiriting" },
+    // className: "col-12",
+  },
+  {
+    label: "Familiya",
+    key: "lastName",
+    options: { required: "Familiyani kiriting" },
+  },
+  {
+    label: "Fan",
+    key: "subject",
+    options: { required: "Fanni kiriting" },
+  },
+  {
+    label: "Telefon nomeri",
+    key: "phone",
+    options: {
+      required: "Telefon nomerini kiriting",
+      minLength: { value: 9, message: "To'g'ri kiriting" },
+    },
+  },
+  {
+    label: "Tug'ilgan sanasi",
+    key: "birthDate",
+    // readOnly: true,
+  },
+];
+
 const TeachersPage = () => {
+  const navigate = useNavigate();
+
+  const actions = {
+    edit: (index) => {
+      navigate(`edit/${index}`);
+    },
+    delete: (index) => {
+      dataTeachers.splice(index, 1);
+    },
+  };
+
   return (
     <>
       <div className="mb-3">
@@ -32,7 +76,7 @@ const TeachersPage = () => {
           </Button>
         </Link>
       </div>
-      <DataTable rows={dataTeachers} columns={columns} />
+      <DataTable rows={dataTeachers} columns={columns} actions={actions} />
     </>
   );
 };
@@ -40,11 +84,18 @@ const TeachersPage = () => {
 export default function Teachers() {
   return (
     <>
-      <h2 className="mb-4">O'qituvchilar</h2>
-
       <Routes>
-        <Route path="/add" element={<CreateForm />} />
-        <Route path="/" element={<TeachersPage></TeachersPage>} />
+        <Route path="/add" element={<AddPage form={form} />} />
+        <Route path="/edit/:id" element={<EditPage form={form} />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <h2 className="mb-4">O'qituvchilar</h2>
+              <TeachersPage></TeachersPage>
+            </>
+          }
+        />
       </Routes>
     </>
   );

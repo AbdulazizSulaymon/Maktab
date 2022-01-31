@@ -16,6 +16,9 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCog, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Button } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -104,7 +107,7 @@ function TablePaginationActions(props) {
 }
 
 export default function DataTable(props) {
-  const { columns, rows } = props;
+  const { columns, rows, actions } = props;
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -138,6 +141,11 @@ export default function DataTable(props) {
                   {column.title}
                 </StyledTableCell>
               ))}
+              {actions && (
+                <StyledTableCell sx={{ textAlign: "center" }}>
+                  <FontAwesomeIcon icon={faCog} />
+                </StyledTableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -147,10 +155,32 @@ export default function DataTable(props) {
             ).map((row, i) => (
               <StyledTableRow key={i}>
                 <StyledTableCell>{page * rowsPerPage + i + 1}</StyledTableCell>
-                {columns.map((column, i) => {
+                {columns.map((column, j) => {
                   const text = getValue(row, column);
                   return <StyledTableCell key={text}>{text}</StyledTableCell>;
                 })}
+                {actions && (
+                  <StyledTableCell sx={{ textAlign: "center" }}>
+                    {actions.edit && (
+                      <Button
+                        sx={{ fontSize: "18px" }}
+                        color={"warning"}
+                        onClick={() => actions.edit(page * rowsPerPage + i)}
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Button>
+                    )}
+                    {actions.delete && (
+                      <Button
+                        sx={{ fontSize: "18px" }}
+                        color={"error"}
+                        onClick={() => actions.delete(page * rowsPerPage + i)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </Button>
+                    )}
+                  </StyledTableCell>
+                )}
               </StyledTableRow>
             ))}
 
